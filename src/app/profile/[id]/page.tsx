@@ -1,13 +1,16 @@
+// src/app/profile/[id]/page.tsx
+
 import { notFound } from "next/navigation";
 import clientPromise from "@/lib/mongodb";
+import { MongoClient } from "mongodb";
 
-export default async function ProfilePage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const client = await clientPromise;
+// Force dynamic rendering
+export const dynamic = "force-dynamic";
+
+const ProfilePage = async ({ params }: any) => {
+  const client: MongoClient = await clientPromise;
   const db = client.db("hipe");
+
   const profile = await db
     .collection("profiles")
     .findOne({ userId: params.id });
@@ -52,4 +55,6 @@ export default async function ProfilePage({
       </ul>
     </main>
   );
-}
+};
+
+export default ProfilePage;
