@@ -1,6 +1,6 @@
 // src/app/api/profile/check/route.ts
 import { NextResponse } from "next/server";
-import connectToDatabase from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/mongodb";
 import { Profile } from "@/models/Profile";
 
 export async function GET(req: Request) {
