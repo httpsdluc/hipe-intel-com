@@ -1,60 +1,59 @@
 // src/app/profile/[id]/page.tsx
-
 import { notFound } from "next/navigation";
-import clientPromise from "@/lib/mongodb";
-import { MongoClient } from "mongodb";
+import connectToDatabase from "@/lib/mongodb";
+import { Profile } from "@/models/Profile";
+import Link from "next/link";
 
-// Force dynamic rendering
-export const dynamic = "force-dynamic";
+type Props = {
+  params: { id: string };
+};
 
-const ProfilePage = async ({ params }: any) => {
-  const client: MongoClient = await clientPromise;
-  const db = client.db("hipe");
-
-  const profile = await db
-    .collection("profiles")
-    .findOne({ userId: params.id });
+export default async function ProfilePage({ params }: Props) {
+  await connectToDatabase();
+  const profile = await Profile.findOne({ userId: params.id });
 
   if (!profile) return notFound();
 
   return (
-    <main className="max-w-2xl mx-auto mt-10 p-6 bg-gray-900 text-white rounded-xl shadow border border-gray-700">
-      <h1 className="text-2xl font-bold mb-4">👤 {profile.occupation}</h1>
-      <ul className="space-y-2 text-sm">
-        {profile.major && (
-          <li>
-            <strong>Major:</strong> {profile.major}
-          </li>
-        )}
-        {profile.school && (
-          <li>
-            <strong>School:</strong> {profile.school}
-          </li>
-        )}
-        <li>
-          <strong>Expertise:</strong> {profile.expertise}
-        </li>
-        <li>
-          <strong>Aspiration:</strong> {profile.aspiration}
-        </li>
-        <li>
-          <strong>Age:</strong> {profile.age}
-        </li>
-        <li>
-          <strong>Birthday:</strong> {profile.birthday}
-        </li>
-        <li>
-          <strong>Gender:</strong> {profile.gender}
-        </li>
-        <li>
-          <strong>Ethnicity:</strong> {profile.ethnicity}
-        </li>
-        <li>
-          <strong>Race:</strong> {profile.race}
-        </li>
-      </ul>
-    </main>
-  );
-};
+    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white dark:bg-black rounded-xl shadow-md">
+      <h1 className="text-2xl font-bold mb-4">Profile for {profile.userId}</h1>
+      <p>
+        <strong>Occupation:</strong> {profile.occupation}
+      </p>
+      <p>
+        <strong>Major:</strong> {profile.major}
+      </p>
+      <p>
+        <strong>School:</strong> {profile.school}
+      </p>
+      <p>
+        <strong>Expertise:</strong> {profile.expertise}
+      </p>
+      <p>
+        <strong>Aspiration:</strong> {profile.aspiration}
+      </p>
+      <p>
+        <strong>Age:</strong> {profile.age}
+      </p>
+      <p>
+        <strong>Birthday:</strong> {profile.birthday}
+      </p>
+      <p>
+        <strong>Gender:</strong> {profile.gender}
+      </p>
+      <p>
+        <strong>Ethnicity:</strong> {profile.ethnicity}
+      </p>
+      <p>
+        <strong>Race:</strong> {profile.race}
+      </p>
 
-export default ProfilePage;
+      <Link
+        href="/profile/edit"
+        className="inline-block mt-4 text-blue-500 hover:underline"
+      >
+        Edit Profile
+      </Link>
+    </div>
+  );
+}

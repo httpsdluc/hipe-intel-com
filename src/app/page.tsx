@@ -53,14 +53,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features Section - Fixed 2x2 Grid */}
       <section className="py-16 px-4 bg-gray-900/50">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-[800px] mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10">
             Explore Our Resources
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 px-4">
+          <div className="grid grid-cols-2 grid-rows-2 gap-6">
             {[
               {
                 title: "Learn More",
@@ -87,37 +87,38 @@ export default function HomePage() {
                 href: "/stay-up-to-date",
               },
             ].map((feature) => (
-              <Link
-                key={feature.title}
-                href={feature.href}
-                className="bg-gray-900 border border-gray-800 hover:border-blue-500 rounded-xl p-4 shadow hover:shadow-md transition-all duration-300 flex flex-col justify-between"
-              >
-                <div>
-                  <h3 className="text-lg font-semibold text-blue-400 mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-sm text-gray-300 mb-3">
-                    {feature.description}
-                  </p>
-                </div>
-                <span className="text-blue-400 hover:text-blue-300 text-xs font-medium inline-flex items-center mt-auto">
-                  Learn more
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-3 w-3 ml-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </span>
-              </Link>
+              <div key={feature.title} className="relative w-full pb-[100%]">
+                <Link
+                  href={feature.href}
+                  className="absolute inset-0 bg-gray-900 border border-gray-800 hover:border-blue-500 rounded-xl p-6 shadow hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
+                >
+                  <div>
+                    <h3 className="text-lg font-semibold text-blue-400 mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sm text-gray-300 mb-4">
+                      {feature.description}
+                    </p>
+                  </div>
+                  <span className="text-blue-400 hover:text-blue-300 text-xs font-medium inline-flex items-center mt-auto">
+                    Learn more
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-3 w-3 ml-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </span>
+                </Link>
+              </div>
             ))}
           </div>
         </div>

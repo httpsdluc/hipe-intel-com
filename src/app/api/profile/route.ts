@@ -1,21 +1,22 @@
 // src/app/api/profile/route.ts
-import { NextResponse } from "next/server";
-import clientPromise from "@/lib/mongodb";
+import connectToDatabase from "@/lib/mongodb";
+import { Profile } from "@/models/Profile";
 
-export async function POST(req: Request) {
-  try {
-    const body = await req.json();
-    const client = await clientPromise;
-    const db = client.db("hipe");
-    const profiles = db.collection("profiles");
+export async function GET() {
+  await connectToDatabase();
+  const profiles = await Profile.find();
+  return new Response(JSON.stringify(profiles), { status: 200 });
+}
 
-    const result = await profiles.insertOne(body);
-    return NextResponse.json({ success: true, insertedId: result.insertedId });
-  } catch (err) {
-    console.error("Failed to save profile:", err);
-    return NextResponse.json(
-      { success: false, error: "Failed to save" },
-      { status: 500 }
-    );
-  }
+export async function PUT(req: Request) {
+  await connectToDatabase();
+  const body = await req.json();
+
+  const updated = await Profile.findOneAndUpdate(
+    { userId: body.userId },
+    { $set: body },
+    { new: true, upsert: true }
+  );
+
+  return new Response(JSON.stringify(updated), { status: 200 });
 }

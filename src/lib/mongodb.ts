@@ -1,28 +1,21 @@
 // src/lib/mongodb.ts
-import { MongoClient } from "mongodb";
+import mongoose from "mongoose";
 
-const uri = process.env.MONGODB_URI!;
-const options = {};
+let isConnected = false;
 
-let client: MongoClient;
-let clientPromise: Promise<MongoClient>;
+const connectToDatabase = async () => {
+  if (isConnected) return;
 
-if (!process.env.MONGODB_URI) {
-  throw new Error("Please add your Mongo URI to .env.local");
-}
-
-if (process.env.NODE_ENV === "development") {
-  // @ts-ignore
-  if (!global._mongoClientPromise) {
-    client = new MongoClient(uri, options);
-    // @ts-ignore
-    global._mongoClientPromise = client.connect();
+  try {
+    await mongoose.connect(process.env.MONGODB_URI!, {
+      dbName: "hipe-intel-com",
+    });
+    isConnected = true;
+    console.log("✅ MongoDB connected");
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error);
+    throw new Error("MongoDB connection failed");
   }
-  // @ts-ignore
-  clientPromise = global._mongoClientPromise;
-} else {
-  client = new MongoClient(uri, options);
-  clientPromise = client.connect();
-}
+};
 
-export default clientPromise;
+export default connectToDatabase;

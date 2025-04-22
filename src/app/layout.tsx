@@ -1,10 +1,12 @@
 import "./globals.css";
+import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import Navbar from "@/components/Navbar"; // ✅ Make sure this exists and has no typos
+import { ThemeProvider } from "@/components/theme-provider";
+import Navbar from "@/components/Navbar";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "HIPE INTEL COM",
-  description: "A community for future intelligence professionals",
+  description: "Secure Community for Cybersecurity & Intelligence Enthusiasts",
 };
 
 export default function RootLayout({
@@ -14,10 +16,17 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className="bg-gray-950 text-white">
-          <Navbar />
-          {children}
+      <html lang="en" suppressHydrationWarning>
+        <body>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            <main className="px-6">{children}</main>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

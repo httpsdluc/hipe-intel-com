@@ -1,17 +1,18 @@
+// src/app/api/profile/check/route.ts
 import { NextResponse } from "next/server";
-import clientPromise from "@/lib/mongodb";
+import connectToDatabase from "@/lib/mongodb";
+import { Profile } from "@/models/Profile";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
 
   if (!userId) {
-    return NextResponse.json({ exists: false });
+    return NextResponse.json({ error: "Missing userId" }, { status: 400 });
   }
 
-  const client = await clientPromise;
-  const db = client.db("hipe");
-  const profile = await db.collection("profiles").findOne({ userId });
+  await connectToDatabase();
+  const profile = await Profile.findOne({ userId });
 
   return NextResponse.json({ exists: !!profile });
 }
