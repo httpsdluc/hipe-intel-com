@@ -1,10 +1,10 @@
 // src/app/api/all/route.ts
-import { connectDB } from "@/lib/db";
+import { connectToDatabase } from "@/lib/mongodb";
 import { Profile } from "@/models/Profile";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  await connectDB();
+  await connectToDatabase();
 
   const profiles = await Profile.find(
     {},

@@ -1,10 +1,10 @@
 //src/app/api/profile/edit/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB } from "@/lib/db";
+import { connectToDatabase } from "@/lib/mongodb";
 import { Profile } from "@/models/Profile";
 
 export async function POST(req: NextRequest) {
-  await connectDB();
+  await connectToDatabase();
   const data = await req.json();
 
   try {
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  await connectDB();
+  await connectToDatabase();
   const userId = req.nextUrl.searchParams.get("userId");
 
   if (!userId)
