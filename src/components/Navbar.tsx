@@ -1,13 +1,18 @@
+//src/components/Navbar.tsx
 "use client";
 
 import Link from "next/link";
 import { useUser, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { cn } from "@/lib/utils";
 
 export default function Navbar() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const { user } = useUser();
   const pathname = usePathname();
 
@@ -19,10 +24,12 @@ export default function Navbar() {
     { href: "/stay-up-to-date", label: "News" },
   ];
 
+  // 🔐 Avoid rendering until client-side mounted
+  if (!mounted) return null;
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        {/* Brand */}
         <Link
           href="/"
           className="text-xl font-semibold tracking-tight text-foreground hover:opacity-80 transition"
@@ -30,7 +37,6 @@ export default function Navbar() {
           HIPE INTEL COM
         </Link>
 
-        {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-6">
           {links.map((link) => (
             <Link
@@ -48,9 +54,7 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Right actions */}
         <div className="flex items-center gap-6">
-          {/* Theme toggle with margin-right for separation */}
           <div className="mr-4">
             <ModeToggle />
           </div>

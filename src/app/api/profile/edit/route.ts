@@ -1,3 +1,4 @@
+//src/app/api/profile/edit/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Profile } from "@/models/Profile";

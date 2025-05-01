@@ -1,3 +1,4 @@
+// src/app/api/all/route.ts
 import { connectDB } from "@/lib/db";
 import { Profile } from "@/models/Profile";
 import { NextResponse } from "next/server";

@@ -1,4 +1,4 @@
-// src/app/api/profile/route.ts
+//src/app/api/profile/route.ts
 import { connectToDatabase } from "@/lib/mongodb";
 import { Profile } from "@/models/Profile";
 

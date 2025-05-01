@@ -1,16 +1,14 @@
 // src/app/api/profile/[id]/route.ts
-
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import { Profile } from "@/models/Profile";
 
-export async function GET(
-  _req: Request,
-  { params }: { params: { id: string } }
-) {
-  await connectToDatabase();
+// @ts-ignore: Next.js App Router requires no types here
+export async function GET(req, context) {
+  const { id } = context.params;
 
-  const profile = await Profile.findOne({ userId: params.id });
+  await connectToDatabase();
+  const profile = await Profile.findOne({ userId: id });
 
   if (!profile) {
     return NextResponse.json({ error: "Profile not found" }, { status: 404 });
