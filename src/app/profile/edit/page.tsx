@@ -1,3 +1,4 @@
+// src/app/profile/edit/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -31,10 +32,13 @@ export default function EditProfilePage() {
       fetch(`/api/profile?userId=${user.id}`)
         .then((res) => res.json())
         .then((data) => {
-          setFormData({ ...data, userId: user.id });
+          if (data?.userId) {
+            setFormData({ ...data, userId: user.id });
+          }
           setLoading(false);
         })
         .catch((err) => {
+          console.error(err);
           setError("Failed to fetch profile.");
           setLoading(false);
         });
@@ -49,30 +53,41 @@ export default function EditProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/profile", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-    if (res.ok) {
-      setSuccess(true);
-      router.push(`/profile/${user?.id}`);
-    } else {
-      setError("Update failed.");
+    try {
+      const res = await fetch("/api/profile/edit", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        setSuccess(true);
+        router.push(`/profile/${user?.id}`);
+      } else {
+        const err = await res.json();
+        setError(err.error || "Update failed.");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Something went wrong.");
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p className="text-center mt-10">Loading...</p>;
 
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white dark:bg-black rounded-xl shadow-md">
-      <h1 className="text-2xl font-bold mb-4">Edit Your Profile</h1>
+      <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">
+        Edit Your Profile
+      </h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         {Object.entries(formData).map(
           ([key, value]) =>
             key !== "userId" && (
               <div key={key}>
-                <label className="block mb-1 capitalize">{key}</label>
+                <label className="block mb-1 capitalize text-black dark:text-white">
+                  {key}
+                </label>
                 <input
                   type="text"
                   name={key}
