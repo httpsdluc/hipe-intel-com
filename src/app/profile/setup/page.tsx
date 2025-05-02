@@ -1,3 +1,4 @@
+// src/app/profile/setup/page.tsx
 "use client";
 
 import { useUser } from "@clerk/nextjs";
@@ -23,20 +24,65 @@ export default function ProfileSetupPage() {
     race: "",
   });
 
-  // ✅ Skip profile setup if already exists
   useEffect(() => {
     const checkProfile = async () => {
       if (!user?.id) return;
-      const res = await fetch(`/api/profile/check?userId=${user.id}`);
-      const data = await res.json();
-      if (data.exists) {
-        router.push(`/profile/${user.id}`);
-      } else {
+
+      try {
+        const res = await fetch(`/api/profile/check?userId=${user.id}`);
+        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+
+        const data = await res.json();
+        console.log("✅ Profile check result:", data);
+
+        if (data.exists) {
+          router.push(`/profile/${user.id}`);
+        } else {
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error("❌ Error checking profile:", err);
+        toast.error("Failed to check profile. Try again.");
         setLoading(false);
       }
     };
+
     checkProfile();
   }, [user, router]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("/api/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, userId: user?.id }),
+      });
+
+      if (res.ok) {
+        toast.success("Profile saved!");
+        router.push(`/profile/${user?.id}`);
+      } else {
+        throw new Error("Profile creation failed");
+      }
+    } catch (err) {
+      console.error("❌ Error saving profile:", err);
+      toast.error("Error saving profile.");
+    }
+  };
+
+  if (loading) {
+    return (
+      <p className="text-center text-white mt-10">Checking your profile...</p>
+    );
+  }
 
   const occupations = ["Student", "Professional", "Educator", "Other"];
   const expertiseLevels = [
@@ -84,34 +130,6 @@ export default function ProfileSetupPage() {
     "Some Other Ethnicity",
   ];
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const res = await fetch("/api/profile", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, userId: user?.id }),
-    });
-    if (res.ok) {
-      toast.success("Profile saved!");
-      router.push(`/profile/${user?.id}`);
-    } else {
-      toast.error("Error saving profile");
-    }
-  };
-
-  if (loading) {
-    return (
-      <p className="text-center text-white mt-10">Checking your profile...</p>
-    );
-  }
-
-  // 👇 The full form if no profile exists
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-gray-900 text-white rounded-xl shadow-md border border-gray-700">
       <h1 className="text-3xl font-bold mb-6 text-center">
@@ -151,16 +169,16 @@ export default function ProfileSetupPage() {
               placeholder="Major"
               value={form.major}
               onChange={handleChange}
-              className="w-full p-2 bg-gray-800 text-white rounded"
               required
+              className="w-full p-2 bg-gray-800 text-white rounded"
             />
             <input
               name="school"
               placeholder="School"
               value={form.school}
               onChange={handleChange}
-              className="w-full p-2 bg-gray-800 text-white rounded"
               required
+              className="w-full p-2 bg-gray-800 text-white rounded"
             />
           </>
         )}
