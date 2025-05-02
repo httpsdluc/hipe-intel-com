@@ -1,5 +1,6 @@
-@import "tailwindcss/preflight";
-@import "tailwindcss/utilities";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Global CSS variables for light and dark themes */
 :root {
