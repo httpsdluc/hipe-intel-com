@@ -53,6 +53,56 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Mission Section */}
+      <section className="px-6 py-16 bg-gray-900/60">
+        <div className="max-w-3xl mx-auto text-left space-y-10">
+          <div>
+            <h2 className="text-3xl font-bold text-blue-400 mb-4">
+              Mission Statement
+            </h2>
+            <p className="text-gray-300 text-lg leading-relaxed">
+              <strong>HIPE INTEL COM</strong> is dedicated to building an
+              inclusive, forward-thinking community for aspiring members of the
+              U.S. Intelligence Community. Our mission is to educate, connect,
+              and empower individuals through accessible tools, collaborative
+              learning, and real-world opportunities—bridging the gap between
+              interest and impact in national intelligence.
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-3xl font-bold text-blue-400 mb-4">
+              Our Culture & Values
+            </h2>
+            <ul className="list-disc list-inside text-gray-300 space-y-4 text-lg">
+              <li>
+                <strong>Inclusivity & Representation</strong> – Welcoming
+                individuals from all backgrounds with a focus on equity and
+                access.
+              </li>
+              <li>
+                <strong>Mission-Driven Curiosity</strong> – Fostering interest
+                in the structure, function, and ethics of the U.S. intelligence
+                agencies.
+              </li>
+              <li>
+                <strong>Security & Integrity</strong> – Promoting responsible
+                use of open-source tools and ethical community engagement.
+              </li>
+              <li>
+                <strong>Collaboration</strong> – Encouraging mutual respect,
+                support, and shared learning over competition.
+              </li>
+              <li>
+                <strong>Growth-Oriented Mindset</strong> – Supporting ongoing
+                personal and professional development through mentorship and
+                transparency.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section - Fixed 2x2 Grid */}
       <section className="py-16 px-4 bg-gray-900/50">
         <div className="max-w-[800px] mx-auto">

@@ -1,3 +1,5 @@
+//src/app/profile/[id]/page.tsx
+
 import { notFound } from "next/navigation";
 import { connectToDatabase } from "@/lib/mongodb";
 import { Collection } from "mongodb";
