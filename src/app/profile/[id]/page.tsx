@@ -5,7 +5,14 @@ import { Profile } from "@/models/Profile";
 import { ProfileType } from "@/types/Profile";
 import Link from "next/link";
 
-export default async function Page({ params }: { params: { id: string } }) {
+// ✅ Next.js 15-compatible type
+interface Props {
+  params: {
+    id: string;
+  };
+}
+
+export default async function Page({ params }: Props) {
   await connectToDatabase();
 
   const profile = (await Profile.findOne({
@@ -42,8 +49,9 @@ export default async function Page({ params }: { params: { id: string } }) {
           </div>
         ))}
       </div>
+
       <Link
-        href={`/profile/edit`}
+        href="/profile/edit"
         className="block text-center mt-6 text-blue-400 hover:underline"
       >
         Edit Your Profile
