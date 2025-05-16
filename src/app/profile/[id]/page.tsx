@@ -1,18 +1,13 @@
 // src/app/profile/[id]/page.tsx
+export const dynamic = "force-dynamic";
+
 import { notFound } from "next/navigation";
 import connectToDatabase from "@/lib/mongodb";
 import { Profile } from "@/models/Profile";
 import { ProfileType } from "@/types/Profile";
 import Link from "next/link";
 
-// ✅ Next.js 15-compatible type
-interface Props {
-  params: {
-    id: string;
-  };
-}
-
-export default async function Page({ params }: Props) {
+export default async function Page({ params }: { params: { id: string } }) {
   await connectToDatabase();
 
   const profile = (await Profile.findOne({
