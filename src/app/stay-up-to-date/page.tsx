@@ -21,12 +21,7 @@ export default function NewsPage() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(
-          query
-        )}&lang=en&max=10&sortby=publishedAt&token=${
-          process.env.NEXT_PUBLIC_GNEWS_API_KEY
-        }`;
-
+        const url = `/api/news?q=${encodeURIComponent(query)}`;
         const res = await fetch(url);
         const data = await res.json();
         console.log("🛰️ GNews result:", data);
