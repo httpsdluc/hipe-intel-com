@@ -1,12 +1,11 @@
-// app/sign-up/[[...sign-up]]/page.tsx
 "use client";
 
-import { SignUp } from "@clerk/nextjs";
+import { SignIn } from "@clerk/nextjs";
 
-export default function SignUpPage() {
+export default function SignInPage() {
   return (
     <main className="flex justify-center items-center min-h-screen bg-black text-white">
-      <SignUp />
+      <SignIn />
     </main>
   );
 }

@@ -1,6 +1,6 @@
 // src/app/api/profile/check/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/mongodb";
+import connectToDatabase from "@/lib/mongodb";
 import { Profile } from "@/models/Profile";
 
 export async function GET(req: NextRequest) {
@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     await connectToDatabase();
     const profile = await Profile.findOne({ userId });
 
-    return NextResponse.json({ exists: !!profile });
+    return NextResponse.json({ exists: !!profile, profile }); // ✅ full data
   } catch (error) {
     console.error("❌ API /profile/check failed:", error);
     return NextResponse.json(

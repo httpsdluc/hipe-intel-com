@@ -1,8 +1,8 @@
-// src/models/Profile.ts
+//src/models/Profile.ts
 import mongoose from "mongoose";
 
 const ProfileSchema = new mongoose.Schema({
-  userId: String,
+  userId: { type: String, required: true, unique: true },
   occupation: String,
   major: String,
   school: String,

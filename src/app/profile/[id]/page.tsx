@@ -1,73 +1,53 @@
-//src/app/profile/[id]/page.tsx
-
+// src/app/profile/[id]/page.tsx
 import { notFound } from "next/navigation";
-import { connectToDatabase } from "@/lib/mongodb";
-import { Collection } from "mongodb";
+import connectToDatabase from "@/lib/mongodb";
+import { Profile } from "@/models/Profile";
+import { ProfileType } from "@/types/Profile";
+import Link from "next/link";
 
-export const dynamic = "force-dynamic"; // ✅ Avoid build-time DB connection
+export default async function Page({ params }: { params: { id: string } }) {
+  await connectToDatabase();
 
-interface Profile {
-  userId: string;
-  occupation: string;
-  major: string;
-  school: string;
-  expertise: string;
-  aspiration: string;
-  age: string;
-  birthday: string;
-  gender: string;
-  ethnicity: string;
-  race: string;
-}
-
-// @ts-expect-error Next.js App Router requires untyped params
-export default async function Page({ params }) {
-  const { id } = params;
-
-  const db = await connectToDatabase();
-  const collection = db.collection("profiles") as Collection<Profile>;
-  const profile = await collection.findOne({ userId: id });
+  const profile = (await Profile.findOne({
+    userId: params.id,
+  }).lean()) as ProfileType | null;
 
   if (!profile) return notFound();
 
+  const fields: { label: string; value: string | undefined }[] = [
+    { label: "Occupation", value: profile.occupation },
+    { label: "Major", value: profile.major },
+    { label: "School", value: profile.school },
+    { label: "Expertise", value: profile.expertise },
+    { label: "Aspiration", value: profile.aspiration },
+    { label: "Age", value: profile.age },
+    { label: "Birthday", value: profile.birthday },
+    { label: "Gender", value: profile.gender },
+    { label: "Ethnicity", value: profile.ethnicity },
+    { label: "Race", value: profile.race },
+  ];
+
   return (
-    <main className="p-6 text-white max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">User Profile</h1>
-      <div className="space-y-2">
-        <p>
-          <strong>User ID:</strong> {profile.userId}
-        </p>
-        <p>
-          <strong>Occupation:</strong> {profile.occupation}
-        </p>
-        <p>
-          <strong>Major:</strong> {profile.major}
-        </p>
-        <p>
-          <strong>School:</strong> {profile.school}
-        </p>
-        <p>
-          <strong>Expertise:</strong> {profile.expertise}
-        </p>
-        <p>
-          <strong>Aspiration:</strong> {profile.aspiration}
-        </p>
-        <p>
-          <strong>Age:</strong> {profile.age}
-        </p>
-        <p>
-          <strong>Birthday:</strong> {profile.birthday}
-        </p>
-        <p>
-          <strong>Gender:</strong> {profile.gender}
-        </p>
-        <p>
-          <strong>Ethnicity:</strong> {profile.ethnicity}
-        </p>
-        <p>
-          <strong>Race:</strong> {profile.race}
-        </p>
+    <div className="max-w-2xl mx-auto mt-10 p-6 bg-gray-900 text-white rounded-xl shadow-md border border-gray-700">
+      <h1 className="text-3xl font-bold mb-6 text-center">Your Profile</h1>
+
+      <div className="space-y-4">
+        {fields.map(({ label, value }) => (
+          <div
+            key={label}
+            className="flex justify-between border-b border-gray-700 pb-2"
+          >
+            <span className="font-semibold text-gray-300">{label}</span>
+            <span className="text-white">{value || "—"}</span>
+          </div>
+        ))}
       </div>
-    </main>
+      <Link
+        href={`/profile/edit`}
+        className="block text-center mt-6 text-blue-400 hover:underline"
+      >
+        Edit Your Profile
+      </Link>
+    </div>
   );
 }

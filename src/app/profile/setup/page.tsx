@@ -1,4 +1,4 @@
-// src/app/profile/setup/page.tsx
+//src/app/profile/setup/page.tsx
 "use client";
 
 import { useUser } from "@clerk/nextjs";
@@ -31,10 +31,7 @@ export default function ProfileSetupPage() {
       try {
         const res = await fetch(`/api/profile/check?userId=${user.id}`);
         if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
-
         const data = await res.json();
-        console.log("✅ Profile check result:", data);
-
         if (data.exists) {
           router.push(`/profile/${user.id}`);
         } else {
@@ -42,7 +39,7 @@ export default function ProfileSetupPage() {
         }
       } catch (err) {
         console.error("❌ Error checking profile:", err);
-        toast.error("Failed to check profile. Try again.");
+        toast.error("Failed to check profile.");
         setLoading(false);
       }
     };
@@ -70,6 +67,8 @@ export default function ProfileSetupPage() {
         toast.success("Profile saved!");
         router.push(`/profile/${user?.id}`);
       } else {
+        const errorData = await res.json(); // ✅ log exact reason
+        console.error("❌ Server error:", errorData);
         throw new Error("Profile creation failed");
       }
     } catch (err) {
