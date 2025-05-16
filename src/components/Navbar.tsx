@@ -44,7 +44,7 @@ export default function Navbar() {
               href={link.href}
               className={cn(
                 "text-sm font-medium transition-colors hover:text-primary",
-                pathname === link.href
+                pathname?.toString() === link.href
                   ? "text-primary underline underline-offset-4"
                   : "text-muted-foreground"
               )}

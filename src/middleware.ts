@@ -1,5 +1,6 @@
 // src/middleware.ts
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 const isPublicRoute = createRouteMatcher([
   "/",
@@ -16,10 +17,10 @@ export default clerkMiddleware(async (auth, req) => {
   try {
     const { userId } = await auth();
     if (!userId) {
-      return Response.redirect(new URL("/unauthorized", req.url));
+      return NextResponse.redirect(new URL("/unauthorized", req.url));
     }
   } catch (err) {
-    return Response.redirect(new URL("/unauthorized", req.url));
+    return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
 });
 
