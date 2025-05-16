@@ -1,5 +1,7 @@
+// src/middleware.ts
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
+// Define which routes are public
 const isPublicRoute = createRouteMatcher(["/", "/sign-in(.*)", "/sign-up(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
@@ -15,6 +17,7 @@ export default clerkMiddleware(async (auth, req) => {
   }
 });
 
+// ✅ Updated matcher to exclude /api routes completely
 export const config = {
-  matcher: ["/((?!_next|.*\\..*).*)"], // this is fine as long as you return early for /api
+  matcher: ["/((?!_next|.*\\..*|api|favicon.ico).*)"],
 };
