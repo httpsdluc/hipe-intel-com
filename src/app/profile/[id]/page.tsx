@@ -7,11 +7,13 @@ import { Profile } from "@/models/Profile";
 import { ProfileType } from "@/types/Profile";
 import Link from "next/link";
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page(props: any) {
+  const id = props?.params?.id;
+
   await connectToDatabase();
 
   const profile = (await Profile.findOne({
-    userId: params.id,
+    userId: id,
   }).lean()) as ProfileType | null;
 
   if (!profile) return notFound();
