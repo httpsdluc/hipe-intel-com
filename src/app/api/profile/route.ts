@@ -1,12 +1,15 @@
-// src/app/api/profile/route.ts
 import connectToDatabase from "@/lib/mongodb";
 import { Profile } from "@/models/Profile";
 
 export async function POST(req: Request) {
   try {
     await connectToDatabase();
-    const body = await req.json();
+    console.log("📥 POST /api/profile triggered");
 
+    const contentType = req.headers.get("content-type");
+    console.log("🧾 Content-Type:", contentType);
+
+    const body = await req.json();
     console.log("📨 Received body:", body);
 
     if (!body.userId) {
