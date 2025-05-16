@@ -2,8 +2,8 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function EditProfilePage() {
@@ -25,10 +25,14 @@ export default function EditProfilePage() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const res = await fetch(`/api/profile/check?userId=${user?.id}`);
-      const data = await res.json();
-      if (data.exists && data.profile) {
-        setForm(data.profile);
+      try {
+        const res = await fetch(`/api/profile/check?userId=${user?.id}`);
+        const data = await res.json();
+        if (data.exists && data.profile) {
+          setForm(data.profile);
+        }
+      } catch (error) {
+        console.error("❌ Failed to load profile:", error);
       }
     };
 
@@ -51,15 +55,17 @@ export default function EditProfilePage() {
         body: JSON.stringify({ ...form, userId: user?.id }),
       });
 
-      if (res.ok) {
-        toast.success("Profile updated!");
-        router.push(`/profile/${user?.id}`);
-      } else {
-        throw new Error("Update failed");
+      if (!res.ok) {
+        const err = await res.json();
+        console.error("❌ Save error:", err);
+        throw new Error("Save failed");
       }
+
+      toast.success("Profile updated!");
+      router.push(`/profile/${user?.id}`);
     } catch (err) {
-      console.error("❌ Update error:", err);
-      toast.error("Could not update profile.");
+      console.error("❌ Error saving profile:", err);
+      toast.error("Could not save profile.");
     }
   };
 

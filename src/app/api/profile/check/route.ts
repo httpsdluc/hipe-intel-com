@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     await connectToDatabase();
     const profile = await Profile.findOne({ userId });
 
-    return NextResponse.json({ exists: !!profile, profile }); // ✅ full data
+    return NextResponse.json({ exists: !!profile, profile }); // ✅ include profile
   } catch (error) {
     console.error("❌ API /profile/check failed:", error);
     return NextResponse.json(
