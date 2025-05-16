@@ -1,12 +1,12 @@
 // src/middleware.ts
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-// ✅ Add /learn-more to public routes
 const isPublicRoute = createRouteMatcher([
   "/",
   "/sign-in(.*)",
   "/sign-up(.*)",
-  "/learn-more", // 👈 make this page public
+  "/learn-more", // ✅ public
+  "/unauthorized", // ✅ for custom error page
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
@@ -14,9 +14,16 @@ export default clerkMiddleware(async (auth, req) => {
 
   if (isPublicRoute(req)) return;
 
-  const { userId } = await auth();
-  if (!userId) {
-    return Response.redirect(new URL("/sign-in", req.url));
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      // ❌ Not signed in, redirect to custom page
+      return Response.redirect(new URL("/unauthorized", req.url));
+    }
+  } catch (err) {
+    // ⛔ auth() threw an error
+    return Response.redirect(new URL("/unauthorized", req.url));
   }
 });
 
