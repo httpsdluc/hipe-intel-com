@@ -1,5 +1,5 @@
 // src/app/api/all/route.ts
-import { connectToDatabase } from "@/lib/mongodb";
+import connectToDatabase from "@/lib/mongodb";
 import { Profile } from "@/models/Profile";
 import { NextResponse } from "next/server";
 

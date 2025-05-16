@@ -1,6 +1,6 @@
 // src/app/api/profile/[id]/route.ts
 import { NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/mongodb";
+import connectToDatabase from "@/lib/mongodb";
 import { Profile } from "@/models/Profile";
 
 // @ts-ignore: Next.js App Router requires no types here

@@ -1,6 +1,6 @@
 // src/app/api/profile/edit/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/mongodb";
+import connectToDatabase from "@/lib/mongodb";
 import { Profile } from "@/models/Profile";
 
 export async function PUT(req: NextRequest) {
