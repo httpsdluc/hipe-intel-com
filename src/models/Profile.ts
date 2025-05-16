@@ -1,8 +1,10 @@
 //src/models/Profile.ts
 import mongoose from "mongoose";
 
+// src/models/Profile.ts
 const ProfileSchema = new mongoose.Schema({
   userId: { type: String, required: true, unique: true },
+  username: { type: String, required: true, unique: true }, // ✅ add this
   occupation: String,
   major: String,
   school: String,

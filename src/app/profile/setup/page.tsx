@@ -12,6 +12,7 @@ export default function ProfileSetupPage() {
 
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
+    username: "",
     occupation: "",
     major: "",
     school: "",
@@ -146,6 +147,14 @@ export default function ProfileSetupPage() {
           value={user?.emailAddresses[0]?.emailAddress || ""}
           disabled
           className="w-full p-2 rounded bg-gray-800 text-gray-300"
+        />
+        <input
+          name="username"
+          placeholder="Username"
+          value={form.username}
+          onChange={handleChange}
+          required
+          className="w-full p-2 bg-gray-800 text-white rounded"
         />
 
         <select
