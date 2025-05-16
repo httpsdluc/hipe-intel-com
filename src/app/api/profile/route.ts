@@ -1,19 +1,13 @@
+// src/app/api/profile/route.ts
 import connectToDatabase from "@/lib/mongodb";
 import { Profile } from "@/models/Profile";
 
 export async function POST(req: Request) {
   try {
     await connectToDatabase();
-    console.log("📥 POST /api/profile triggered");
-
-    const contentType = req.headers.get("content-type");
-    console.log("🧾 Content-Type:", contentType);
-
     const body = await req.json();
-    console.log("📨 Received body:", body);
 
     if (!body.userId) {
-      console.error("❌ Missing userId");
       return new Response(JSON.stringify({ error: "Missing userId" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
@@ -26,17 +20,44 @@ export async function POST(req: Request) {
       { new: true, upsert: true, runValidators: true }
     );
 
-    console.log("✅ Mongo result:", result);
-
     return new Response(JSON.stringify(result), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (err: any) {
-    console.error("🔥 Error in POST /api/profile:", err.message, err.stack);
-    return new Response(
-      JSON.stringify({ error: err.message, stack: err.stack }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    await connectToDatabase();
+    const body = await req.json();
+
+    if (!body.userId) {
+      return new Response(JSON.stringify({ error: "Missing userId" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const updated = await Profile.findOneAndUpdate(
+      { userId: body.userId },
+      { $set: body },
+      { new: true, runValidators: true }
     );
+
+    return new Response(JSON.stringify(updated), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (err: any) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
